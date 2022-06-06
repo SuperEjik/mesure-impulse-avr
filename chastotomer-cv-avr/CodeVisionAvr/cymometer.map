@@ -1,0 +1,22 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+buf                                                               00E7h        8
+timer0                                                            00EFh        2
+timer1                                                            00F1h        2
+saveTimer02                                                       00F3h        2
+saveTimer11                                                       00F5h        2
+saveTimer12                                                       00F7h        2
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+icr11                                                             R4,R5        2
+icr12                                                             R6,R7        2
+tcnt01                                                            R8,R9        2
+tcnt02                                                            R10,R11      2
+saveTimer01                                                       R12,R13      2

@@ -1,0 +1,40 @@
+RAM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+buf                                                                               0x00E7       8
+timer0                                                                            0x00EF       2
+timer1                                                                            0x00F1       2
+tcnt01                                                                            0x00F3       2
+tcnt02                                                                            0x00F5       2
+saveTimer01                                                                       0x00F7       2
+saveTimer02                                                                       0x00F9       2
+saveTimer11                                                                       0x00FB       2
+saveTimer12                                                                       0x00FD       2
+d10 (math64.lib)                                                                  0x00FF       8
+
+EEPROM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                                          Register  Size
+------------------------------------------------------------------------------------------------
+icr11                                                                             R10,R11      2
+icr12                                                                             R12,R13      2
+
+FLASH Allocation [words]
+Function                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+BCD_LongLcd                                                                       0x00065     50
+__swap_nibbles                                                                    0x00097      4
+LCD_WriteComInit                                                                  0x0009B      7
+LCD_WriteCom                                                                      0x000A2     13
+LCD_WriteData                                                                     0x000AF     14
+LCD_Init                                                                          0x000BD     35
+LCD_SendString                                                                    0x000E0     17
+main                                                                              0x000F1     22
+TIM_Init                                                                          0x00107     19
+Capt                                                                              0x0011A     53
+Tim1Ovf                                                                           0x0014F      4
+Tim0Ovf                                                                           0x00153     15
+TIM_Calculation                                                                   0x00162    141

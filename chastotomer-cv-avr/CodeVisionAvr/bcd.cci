@@ -1,0 +1,4 @@
+VERSION:3 SOURCE_TIMESTAMP:3E668969
+NODE:I LEVEL:0 LINE:1 "D:\atmel\project\chastotomer-cv-avr\CodeVisionAvr\bcd.h"
+NODE:V LEVEL:0 LINE:3 "buf -> RAM:????"
+NODE:F LEVEL:0 LINE:5 "BCD_LongLcd(unsigned long value,unsigned char size,unsigned char comma)"

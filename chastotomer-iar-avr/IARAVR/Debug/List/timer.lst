@@ -1,0 +1,514 @@
+###############################################################################
+#                                                                             #
+# IAR Atmel AVR C/C++ Compiler V5.11B/W32               06/Mar/2011  17:06:43 #
+# Copyright 1996-2008 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Source file  =  K:\дело\сайт\заготовки\Мои статьи\Частотомер на          #
+#                    микроконтроллере\Сym_Proj\IARAVR\timer.c                 #
+#    Command line =  "K:\дело\сайт\заготовки\Мои статьи\Частотомер на         #
+#                    микроконтроллере\Сym_Proj\IARAVR\timer.c" --cpu=m8535    #
+#                    -ms -o "K:\дело\сайт\заготовки\Мои статьи\Частотомер на  #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\Obj\" -lCN        #
+#                    "K:\дело\сайт\заготовки\Мои статьи\Частотомер на         #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\List\"            #
+#                    --initializers_in_flash -s9 --debug                      #
+#                    -DENABLE_BIT_DEFINITIONS -e -I "C:\Program Files\IAR     #
+#                    Systems\Embedded Workbench 5.0\avr\INC\" -I "C:\Program  #
+#                    Files\IAR Systems\Embedded Workbench 5.0\avr\INC\CLIB\"  #
+#                    --eeprom_size 512                                        #
+#    List file    =  K:\дело\сайт\заготовки\Мои статьи\Частотомер на          #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\List\timer.lst    #
+#    Object file  =  K:\дело\сайт\заготовки\Мои статьи\Частотомер на          #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\Obj\timer.r90     #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+K:\дело\сайт\заготовки\Мои статьи\Частотомер на микроконтроллере\Сym_Proj\IARAVR\timer.c
+      1          #include "timer.h"
+
+   \                                 In  segment ABSOLUTE, at 0x4c
+   \   <unnamed> volatile __io _A_TCNT1
+   \                     _A_TCNT1:
+   \   00000000                      DS 2
+
+   \                                 In  segment ABSOLUTE, at 0x4e
+   \   <unnamed> volatile __io _A_TCCR1B
+   \                     _A_TCCR1B:
+   \   00000000                      DS 1
+
+   \                                 In  segment ABSOLUTE, at 0x4f
+   \   <unnamed> volatile __io _A_TCCR1A
+   \                     _A_TCCR1A:
+   \   00000000                      DS 1
+
+   \                                 In  segment ABSOLUTE, at 0x52
+   \   <unnamed> volatile __io _A_TCNT0
+   \                     _A_TCNT0:
+   \   00000000                      DS 1
+
+   \                                 In  segment ABSOLUTE, at 0x53
+   \   <unnamed> volatile __io _A_TCCR0
+   \                     _A_TCCR0:
+   \   00000000                      DS 1
+
+   \                                 In  segment ABSOLUTE, at 0x59
+   \   <unnamed> volatile __io _A_TIMSK
+   \                     _A_TIMSK:
+   \   00000000                      DS 1
+      2          
+      3          //инициализация таймера Т1
+
+   \                                 In  segment CODE, align 2, keep-with-next
+      4          void TIM_Init(void)
+   \                     TIM_Init:
+      5          {
+      6             /*инициализация таймера Т1
+      7               -разрешение прерывания по переполнению
+      8               -режим normal
+      9               -захват по переднему фронту
+     10               -предделитьель 1*/
+     11             TIMSK |= (1<<TOIE1);
+   \   00000000   B709               IN      R16, 0x39
+   \   00000002   6004               ORI     R16, 0x04
+   \   00000004   BF09               OUT     0x39, R16
+     12             TCCR1A=(0<<COM1A1)|(0<<COM1A0)|(0<<WGM11)|(0<<WGM10); 
+   \   00000006   E000               LDI     R16, 0
+   \   00000008   BD0F               OUT     0x2F, R16
+     13             TCCR1B=(0<ICNC1)|(1<<ICES1)|(0<<WGM13)|(0<<WGM12)|(0<<CS12)|(0<<CS11)|(1<<CS10); 
+   \   0000000A   E401               LDI     R16, 65
+   \   0000000C   BD0E               OUT     0x2E, R16
+     14             TCNT1 = 0;
+   \   0000000E   E000               LDI     R16, 0
+   \   00000010   E010               LDI     R17, 0
+   \   00000012   BD0D               OUT     0x2D, R16
+   \   00000014   BD0C               OUT     0x2C, R16
+     15             
+     16             /*инициализация таймера Т0
+     17                -разрешение прерывания по переполнению
+     18                -тактовый сигнал - внешний с вывода Т0*/
+     19             TIMSK |= (1<<TOIE0);
+   \   00000016   B709               IN      R16, 0x39
+   \   00000018   6001               ORI     R16, 0x01
+   \   0000001A   BF09               OUT     0x39, R16
+     20             TCCR0 = (1<<CS02)|(1<<CS01)|(1<<CS00);
+   \   0000001C   E007               LDI     R16, 7
+   \   0000001E   BF03               OUT     0x33, R16
+     21             TCNT0 = 0;
+   \   00000020   BF12               OUT     0x32, R17
+     22          }
+   \   00000022   9508               RET
+   \   00000024                      REQUIRE _A_TCNT1
+   \   00000024                      REQUIRE _A_TCCR1B
+   \   00000024                      REQUIRE _A_TCCR1A
+   \   00000024                      REQUIRE _A_TCNT0
+   \   00000024                      REQUIRE _A_TCCR0
+   \   00000024                      REQUIRE _A_TIMSK
+     23          
+     24          //программные счетчики
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+     25          volatile unsigned int timer0 = 0; //считает число переполнений таймера Т0
+   \                     timer0:
+   \   00000000                      DS 2
+     26          volatile unsigned int timer1 = 0; //считает число переполнений таймера Т1
+   \                     timer1:
+   \   00000002                      DS 2
+     27          
+     28          //буферы для хранения значений счетчиков
+     29          unsigned int icr11 = 0, icr12 = 0; 
+   \                     icr11:
+   \   00000004                      DS 2
+   \                     icr12:
+   \   00000006                      DS 2
+     30          unsigned int tcnt01 = 0, tcnt02 = 0;
+   \                     tcnt01:
+   \   00000008                      DS 2
+   \                     tcnt02:
+   \   0000000A                      DS 2
+     31          unsigned int saveTimer01 = 0, saveTimer02 = 0;
+   \                     saveTimer01:
+   \   0000000C                      DS 2
+   \                     saveTimer02:
+   \   0000000E                      DS 2
+     32          unsigned int saveTimer11 = 0, saveTimer12 = 0;
+   \                     saveTimer11:
+   \   00000010                      DS 2
+   \                     saveTimer12:
+   \   00000012                      DS 2
+     33          
+     34          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     35          void Capt(void)
+   \                     Capt:
+     36          {
+     37          unsigned char bufTCNT0;
+     38          unsigned int bufICR1;
+     39          unsigned int bufTimer0;
+     40          unsigned int bufTimer1;
+     41          
+     42             __disable_interrupt();
+   \   00000000   94F8               CLI
+     43             bufTCNT0 = TCNT0;   
+   \   00000002   B702               IN      R16, 0x32
+     44             bufTimer0 = timer0;
+   \   00000004   ....               LDI     R30, LOW(timer0)
+   \   00000006   ....               LDI     R31, (timer0) >> 8
+   \   00000008   8120               LD      R18, Z
+   \   0000000A   8131               LDD     R19, Z+1
+     45             bufICR1 =  TCNT1;
+   \   0000000C   B54C               IN      R20, 0x2C
+   \   0000000E   B55D               IN      R21, 0x2D
+     46             bufTimer1 = timer1;
+   \   00000010   8162               LDD     R22, Z+2
+   \   00000012   8173               LDD     R23, Z+3
+     47             __enable_interrupt();
+   \   00000014   9478               SEI
+     48            
+     49            tcnt01 = tcnt02;
+   \   00000016   8402               LDD     R0, Z+10
+   \   00000018   8413               LDD     R1, Z+11
+   \   0000001A   8600               STD     Z+8, R0
+   \   0000001C   8611               STD     Z+9, R1
+     50            tcnt02 = bufTCNT0;
+   \   0000001E   E010               LDI     R17, 0
+   \   00000020   8702               STD     Z+10, R16
+   \   00000022   8713               STD     Z+11, R17
+     51            
+     52            saveTimer01 = saveTimer02;
+   \   00000024   8506               LDD     R16, Z+14
+   \   00000026   8517               LDD     R17, Z+15
+   \   00000028   8704               STD     Z+12, R16
+   \   0000002A   8715               STD     Z+13, R17
+     53            saveTimer02 = bufTimer0;
+   \   0000002C   8726               STD     Z+14, R18
+   \   0000002E   8737               STD     Z+15, R19
+     54            
+     55            saveTimer11 = saveTimer12;
+   \   00000030   8902               LDD     R16, Z+18
+   \   00000032   8913               LDD     R17, Z+19
+   \   00000034   8B00               STD     Z+16, R16
+   \   00000036   8B11               STD     Z+17, R17
+     56            saveTimer12 = bufTimer1;
+   \   00000038   8B62               STD     Z+18, R22
+   \   0000003A   8B73               STD     Z+19, R23
+     57            
+     58            icr11 = icr12;
+   \   0000003C   8106               LDD     R16, Z+6
+   \   0000003E   8117               LDD     R17, Z+7
+   \   00000040   8304               STD     Z+4, R16
+   \   00000042   8315               STD     Z+5, R17
+     59            icr12 = bufICR1;   
+   \   00000044   8346               STD     Z+6, R20
+   \   00000046   8357               STD     Z+7, R21
+     60          }
+   \   00000048   9508               RET
+   \   0000004A                      REQUIRE _A_TCNT1
+   \   0000004A                      REQUIRE _A_TCNT0
+     61          
+     62          
+     63          #pragma vector = TIMER1_OVF_vect
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     64          __interrupt void Timer1Ovf(void)
+   \                     Timer1Ovf:
+     65          {
+   \   00000000   93FA               ST      -Y, R31
+   \   00000002   93EA               ST      -Y, R30
+   \   00000004   932A               ST      -Y, R18
+   \   00000006   931A               ST      -Y, R17
+   \   00000008   930A               ST      -Y, R16
+   \   0000000A   B72F               IN      R18, 0x3F
+     66             __enable_interrupt();
+   \   0000000C   9478               SEI
+     67             timer1++;  
+   \   0000000E   ....               LDI     R30, LOW(timer0)
+   \   00000010   ....               LDI     R31, (timer0) >> 8
+   \   00000012   8102               LDD     R16, Z+2
+   \   00000014   8113               LDD     R17, Z+3
+   \   00000016   5F0F               SUBI    R16, 255
+   \   00000018   4F1F               SBCI    R17, 255
+   \   0000001A   8302               STD     Z+2, R16
+   \   0000001C   8313               STD     Z+3, R17
+     68          }
+   \   0000001E                      REQUIRE ?Subroutine0
+   \   0000001E                      ;               // Fall through to label ?Subroutine0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   BF2F               OUT     0x3F, R18
+   \   00000002   9109               LD      R16, Y+
+   \   00000004   9119               LD      R17, Y+
+   \   00000006   9129               LD      R18, Y+
+   \   00000008   91E9               LD      R30, Y+
+   \   0000000A   91F9               LD      R31, Y+
+   \   0000000C   9518               RETI
+     69          
+     70          #pragma vector = TIMER0_OVF_vect
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     71          __interrupt void Timer0Ovf(void)
+   \                     Timer0Ovf:
+     72          {  
+   \   00000000   93FA               ST      -Y, R31
+   \   00000002   93EA               ST      -Y, R30
+   \   00000004   932A               ST      -Y, R18
+   \   00000006   931A               ST      -Y, R17
+   \   00000008   930A               ST      -Y, R16
+   \   0000000A   B72F               IN      R18, 0x3F
+     73             timer0++;   
+   \   0000000C   ....               LDI     R30, LOW(timer0)
+   \   0000000E   ....               LDI     R31, (timer0) >> 8
+   \   00000010   8100               LD      R16, Z
+   \   00000012   8111               LDD     R17, Z+1
+   \   00000014   5F0F               SUBI    R16, 255
+   \   00000016   4F1F               SBCI    R17, 255
+   \   00000018   8300               ST      Z, R16
+   \   0000001A   8311               STD     Z+1, R17
+     74          }
+   \   0000001C   ....               RJMP    ?Subroutine0
+     75          
+     76          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     77          __monitor void TIM_Calculation(void)
+   \                     TIM_Calculation:
+     78          {
+   \   00000000   92FA               ST      -Y, R15
+   \   00000002   92EA               ST      -Y, R14
+   \   00000004   92DA               ST      -Y, R13
+   \   00000006   92CA               ST      -Y, R12
+   \   00000008   92BA               ST      -Y, R11
+   \   0000000A   92AA               ST      -Y, R10
+   \   0000000C   929A               ST      -Y, R9
+   \   0000000E   928A               ST      -Y, R8
+   \   00000010   924A               ST      -Y, R4
+   \   00000012   93BA               ST      -Y, R27
+   \   00000014   93AA               ST      -Y, R26
+   \   00000016   938A               ST      -Y, R24
+   \   00000018   B78F               IN      R24, 0x3F
+   \   0000001A                      REQUIRE ?Register_R4_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R8_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R9_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R10_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R11_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R12_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R13_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R14_is_cg_reg
+   \   0000001A                      REQUIRE ?Register_R15_is_cg_reg
+   \   0000001A   94F8               CLI
+   \   0000001C   9728               SBIW    R29:R28, 8
+     79            unsigned long baseImp;
+     80            unsigned long mesurImp;
+     81            unsigned long result;
+     82            
+     83            //вычисляем количество импульсов тактового сигнала
+     84            saveTimer12 = saveTimer12 - saveTimer11;
+   \   0000001E   ....               LDI     R30, LOW(timer0)
+   \   00000020   ....               LDI     R31, (timer0) >> 8
+   \   00000022   8900               LDD     R16, Z+16
+   \   00000024   8911               LDD     R17, Z+17
+   \   00000026   8922               LDD     R18, Z+18
+   \   00000028   8933               LDD     R19, Z+19
+   \   0000002A   1B20               SUB     R18, R16
+   \   0000002C   0B31               SBC     R19, R17
+   \   0000002E   8B22               STD     Z+18, R18
+   \   00000030   8B33               STD     Z+19, R19
+     85            baseImp = (icr12 + (unsigned long)saveTimer12*65536) - icr11;
+   \   00000032   8086               LDD     R8, Z+6
+   \   00000034   8097               LDD     R9, Z+7
+   \   00000036   0159               MOVW    R11:R10, R19:R18
+   \   00000038   8104               LDD     R16, Z+4
+   \   0000003A   8115               LDD     R17, Z+5
+   \   0000003C   E020               LDI     R18, 0
+   \   0000003E   1A80               SUB     R8, R16
+   \   00000040   0A91               SBC     R9, R17
+   \   00000042   0AA2               SBC     R10, R18
+   \   00000044   0AB2               SBC     R11, R18
+     86            
+     87            //вычисляем количество импульсов измеряемого сигнала
+     88            saveTimer02 = saveTimer02 - saveTimer01;
+   \   00000046   8504               LDD     R16, Z+12
+   \   00000048   8515               LDD     R17, Z+13
+   \   0000004A   8526               LDD     R18, Z+14
+   \   0000004C   8537               LDD     R19, Z+15
+   \   0000004E   1B20               SUB     R18, R16
+   \   00000050   0B31               SBC     R19, R17
+   \   00000052   8726               STD     Z+14, R18
+   \   00000054   8737               STD     Z+15, R19
+     89            mesurImp = (tcnt02 + (unsigned  long)saveTimer02*256) - tcnt01;
+   \   00000056   84C2               LDD     R12, Z+10
+   \   00000058   84D3               LDD     R13, Z+11
+   \   0000005A   24EE               CLR     R14
+   \   0000005C   24FF               CLR     R15
+   \   0000005E   2F13               MOV     R17, R19
+   \   00000060   E030               LDI     R19, 0
+   \   00000062   0ED2               ADD     R13, R18
+   \   00000064   1EE1               ADC     R14, R17
+   \   00000066   1CFF               ADC     R15, R15
+   \   00000068   8500               LDD     R16, Z+8
+   \   0000006A   8511               LDD     R17, Z+9
+   \   0000006C   1AC0               SUB     R12, R16
+   \   0000006E   0AD1               SBC     R13, R17
+   \   00000070   0AE3               SBC     R14, R19
+   \   00000072   0AF3               SBC     R15, R19
+     90            
+     91            //вычисляем значение частоты
+     92            result = (16000000UL*(unsigned long long)mesurImp*10)/baseImp;
+     93           
+     94            //выводим на дисплей частоту
+     95            LCD_Goto(7,0);
+   \   00000074   E807               LDI     R16, 135
+   \   00000076   ....               RCALL   LCD_WriteCom
+     96            BCD_LongLcd(result, 8, 1); 
+   \   00000078   0186               MOVW    R17:R16, R13:R12
+   \   0000007A   0197               MOVW    R19:R18, R15:R14
+   \   0000007C   E040               LDI     R20, 0
+   \   0000007E   E050               LDI     R21, 0
+   \   00000080   E060               LDI     R22, 0
+   \   00000082   E070               LDI     R23, 0
+   \   00000084   2444               CLR     R4
+   \   00000086   ....               LDI     R26, LOW(__Constant_9896800_0)
+   \   00000088   ....               LDI     R27, (__Constant_9896800_0) >> 8
+   \   0000008A   ....               RCALL   ?LL_MUL_L12
+   \   0000008C   8288               ST      Y, R8
+   \   0000008E   8299               STD     Y+1, R9
+   \   00000090   82AA               STD     Y+2, R10
+   \   00000092   82BB               STD     Y+3, R11
+   \   00000094   824C               STD     Y+4, R4
+   \   00000096   824D               STD     Y+5, R4
+   \   00000098   824E               STD     Y+6, R4
+   \   0000009A   824F               STD     Y+7, R4
+   \   0000009C   01DE               MOVW    R27:R26, R29:R28
+   \   0000009E   ....               RCALL   ?ULL_DIV_L12
+   \   000000A0   E051               LDI     R21, 1
+   \   000000A2   E048               LDI     R20, 8
+   \   000000A4   ....               RCALL   BCD_LongLcd
+     97            //и для отладки количество опорных и входных импульсов
+     98            LCD_Goto(8,1);
+   \   000000A6   EC08               LDI     R16, 200
+   \   000000A8   ....               RCALL   LCD_WriteCom
+     99            BCD_LongLcd(baseImp, 8,0); 
+   \   000000AA   E050               LDI     R21, 0
+   \   000000AC   E048               LDI     R20, 8
+   \   000000AE   0184               MOVW    R17:R16, R9:R8
+   \   000000B0   0195               MOVW    R19:R18, R11:R10
+   \   000000B2   ....               RCALL   BCD_LongLcd
+    100            LCD_Goto(0,1);
+   \   000000B4   EC00               LDI     R16, 192
+   \   000000B6   ....               RCALL   LCD_WriteCom
+    101            BCD_LongLcd(mesurImp, 7, 0);   
+   \   000000B8   E050               LDI     R21, 0
+   \   000000BA   E047               LDI     R20, 7
+   \   000000BC   0186               MOVW    R17:R16, R13:R12
+   \   000000BE   0197               MOVW    R19:R18, R15:R14
+   \   000000C0   ....               RCALL   BCD_LongLcd
+    102            
+    103            saveTimer01 = 0;
+   \   000000C2   ....               LDI     R30, LOW(timer0)
+   \   000000C4   ....               LDI     R31, (timer0) >> 8
+   \   000000C6   8644               STD     Z+12, R4
+   \   000000C8   8645               STD     Z+13, R4
+    104            saveTimer02 = 0;  
+   \   000000CA   8646               STD     Z+14, R4
+   \   000000CC   8647               STD     Z+15, R4
+    105            saveTimer11 = 0;
+   \   000000CE   8A40               STD     Z+16, R4
+   \   000000D0   8A41               STD     Z+17, R4
+    106            saveTimer12 = 0;
+   \   000000D2   8A42               STD     Z+18, R4
+   \   000000D4   8A43               STD     Z+19, R4
+    107          }
+   \   000000D6   9628               ADIW    R29:R28, 8
+   \   000000D8   BF8F               OUT     0x3F, R24
+   \   000000DA   9189               LD      R24, Y+
+   \   000000DC   91A9               LD      R26, Y+
+   \   000000DE   91B9               LD      R27, Y+
+   \   000000E0   9049               LD      R4, Y+
+   \   000000E2   9089               LD      R8, Y+
+   \   000000E4   9099               LD      R9, Y+
+   \   000000E6   90A9               LD      R10, Y+
+   \   000000E8   90B9               LD      R11, Y+
+   \   000000EA   90C9               LD      R12, Y+
+   \   000000EC   90D9               LD      R13, Y+
+   \   000000EE   90E9               LD      R14, Y+
+   \   000000F0   90F9               LD      R15, Y+
+   \   000000F2   9508               RET
+
+   \                                 In  segment INTVEC, offset 0x10, root
+   \                     `??Timer1Ovf??INTVEC 16`:
+   \   00000010   ....               RJMP    Timer1Ovf
+
+   \                                 In  segment INTVEC, offset 0x12, root
+   \                     `??Timer0Ovf??INTVEC 18`:
+   \   00000012   ....               RJMP    Timer0Ovf
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for 64 Bit Constant>_0`:
+   \   00000000   680009890000       DD 160000000, 0
+   \              0000        
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     __Constant_9896800_0:
+   \   00000000                      DS 8
+   \   00000008                      REQUIRE `?<Initializer for 64 Bit Constant>_0`
+    108          
+
+   Maximum stack usage in bytes:
+
+     Function          CSTACK RSTACK
+     --------          ------ ------
+     Capt                  0      2
+     TIM_Calculation      25      4
+       -> LCD_WriteCom    25      2
+       -> BCD_LongLcd     25      2
+       -> LCD_WriteCom    25      2
+       -> BCD_LongLcd     25      2
+       -> LCD_WriteCom    25      2
+       -> BCD_LongLcd     25      2
+     TIM_Init              0      2
+     Timer0Ovf             5      2
+     Timer1Ovf             5      2
+
+
+   Segment part sizes:
+
+     Function/Label                 Bytes
+     --------------                 -----
+     _A_TCNT1                          2
+     _A_TCCR1B                         1
+     _A_TCCR1A                         1
+     _A_TCNT0                          1
+     _A_TCCR0                          1
+     _A_TIMSK                          1
+     TIM_Init                         36
+     timer0                           20
+     Capt                             74
+     Timer1Ovf                        30
+     ?Subroutine0                     14
+     Timer0Ovf                        30
+     TIM_Calculation                 244
+     ??Timer1Ovf??INTVEC 16            2
+     ??Timer0Ovf??INTVEC 18            2
+     ?<Initializer for 64 Bit Constant>_0
+                                       8
+     __Constant_9896800_0              8
+      Others                          12
+
+ 
+   7 bytes in segment ABSOLUTE
+ 428 bytes in segment CODE
+  12 bytes in segment INITTAB
+   4 bytes in segment INTVEC
+   8 bytes in segment NEAR_I
+   8 bytes in segment NEAR_ID
+  20 bytes in segment NEAR_Z
+ 
+ 428 bytes of CODE memory (+ 24 bytes shared)
+  20 bytes of DATA memory (+ 15 bytes shared)
+
+Errors: none
+Warnings: none

@@ -1,0 +1,448 @@
+###############################################################################
+#                                                                             #
+#                                                       04/Mar/2011  14:31:41 #
+# IAR Atmel AVR C/C++ Compiler V5.11A/W32, Evaluation Version                 #
+# Copyright 1996-2008 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Source file  =  H:\дело\сайт\Cymometer2\lcd_lib.c                        #
+#    Command line =  H:\дело\сайт\Cymometer2\lcd_lib.c --cpu=m8535 -ms -o     #
+#                    H:\дело\сайт\Cymometer2\Debug\Obj\ -lCN                  #
+#                    H:\дело\сайт\Cymometer2\Debug\List\                      #
+#                    --initializers_in_flash -s9 --debug                      #
+#                    -DENABLE_BIT_DEFINITIONS -e -I "E:\IAR Systems\Embedded  #
+#                    Workbench 5.0 Evaluation\avr\INC\" -I "E:\IAR            #
+#                    Systems\Embedded Workbench 5.0                           #
+#                    Evaluation\avr\INC\CLIB\" --eeprom_size 512              #
+#    List file    =  H:\дело\сайт\Cymometer2\Debug\List\lcd_lib.lst           #
+#    Object file  =  H:\дело\сайт\Cymometer2\Debug\Obj\lcd_lib.r90            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+H:\дело\сайт\Cymometer2\lcd_lib.c
+      1          #include "lcd_lib.h"
+
+   \                                 In  segment ABSOLUTE, at 0x34
+   \   <unnamed> volatile __io _A_DDRC
+   \                     _A_DDRC:
+   \   00000000                      DS 1
+
+   \                                 In  segment ABSOLUTE, at 0x35
+   \   <unnamed> volatile __io _A_PORTC
+   \                     _A_PORTC:
+   \   00000000                      DS 1
+      2          
+      3          //макросы для работы с битами
+      4          #define ClearBit(reg, bit)       reg &= (~(1<<(bit)))
+      5          #define SetBit(reg, bit)         reg |= (1<<(bit))	
+      6          #define FLAG_BF 7
+      7          
+      8          //макросы для задержек
+      9          #define _delay_us(us) 	__delay_cycles((F_CPU / 1000000) * (us));
+     10          #define _delay_ms(ms) 	__delay_cycles((F_CPU / 1000) * (ms));
+     11          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     12          void LCD_WriteComInit(unsigned char data)
+   \                     LCD_WriteComInit:
+     13          {
+     14            _delay_us(40);
+   \   00000000   ED15               LDI     R17, 213
+   \   00000002   951A               DEC     R17
+   \   00000004   F7F1               BRNE    $-2
+   \   00000006   0000               NOP
+     15            ClearBit(PORT_SIG, RS);	//установка RS в 0 - команды
+   \   00000008   98A8               CBI     0x15, 0x00
+     16          #ifdef BUS_4BIT
+     17            unsigned char tmp; 
+     18            tmp  = PORT_DATA & 0x0f;
+   \   0000000A   B315               IN      R17, 0x15
+   \   0000000C   701F               ANDI    R17, 0x0F
+     19            tmp |= (data & 0xf0);
+     20            PORT_DATA = tmp;		//вывод старшей тетрады 
+   \   0000000E   7F00               ANDI    R16, 0xF0
+   \   00000010   2B10               OR      R17, R16
+   \   00000012   BB15               OUT     0x15, R17
+     21          #else
+     22            PORT_DATA = data;		//вывод данных на шину индикатора 
+     23          #endif  
+     24            SetBit(PORT_SIG, EN);	        //установка E в 1
+   \   00000014   ....               RJMP    ??Subroutine0_0
+   \   00000016                      REQUIRE _A_PORTC
+     25            _delay_us(2);
+     26            ClearBit(PORT_SIG, EN);	//установка E в 0 - записывающий фронт
+     27          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   B325               IN      R18, 0x15
+   \   00000002   702F               ANDI    R18, 0x0F
+   \   00000004   2F10               MOV     R17, R16
+   \   00000006   7F10               ANDI    R17, 0xF0
+   \   00000008   2B21               OR      R18, R17
+   \   0000000A   BB25               OUT     0x15, R18
+   \   0000000C   9AAA               SBI     0x15, 0x02
+   \   0000000E   E01A               LDI     R17, 10
+   \   00000010   951A               DEC     R17
+   \   00000012   F7F1               BRNE    $-2
+   \   00000014   C000               RJMP    $+2
+   \   00000016   98AA               CBI     0x15, 0x02
+   \   00000018   9502               SWAP    R16
+   \   0000001A   B325               IN      R18, 0x15
+   \   0000001C   702F               ANDI    R18, 0x0F
+   \   0000001E   7F00               ANDI    R16, 0xF0
+   \   00000020   2B20               OR      R18, R16
+   \   00000022   BB25               OUT     0x15, R18
+   \                     ??Subroutine0_0:
+   \   00000024   9AAA               SBI     0x15, 0x02
+   \   00000026   E00A               LDI     R16, 10
+   \   00000028   950A               DEC     R16
+   \   0000002A   F7F1               BRNE    $-2
+   \   0000002C   C000               RJMP    $+2
+   \   0000002E   98AA               CBI     0x15, 0x02
+   \   00000030   9508               RET
+     28          
+     29          
+     30          //общая функция
+     31          #pragma inline = forced
+     32          void LCD_CommonFunc(unsigned char data)
+     33          {
+     34          #ifdef BUS_4BIT  
+     35            unsigned char tmp; 
+     36            tmp  = PORT_DATA & 0x0f;
+     37            tmp |= (data & 0xf0);
+     38          
+     39            PORT_DATA = tmp;		//вывод старшей тетрады 
+     40            SetBit(PORT_SIG, EN);	        
+     41            _delay_us(2);
+     42            ClearBit(PORT_SIG, EN);	
+     43          
+     44            data = __swap_nibbles(data);
+     45            tmp  = PORT_DATA & 0x0f;
+     46            tmp |= (data & 0xf0);
+     47           
+     48            PORT_DATA = tmp;		//вывод младшей тетрады 
+     49            SetBit(PORT_SIG, EN);	        
+     50            _delay_us(2);
+     51            ClearBit(PORT_SIG, EN);	 
+     52          #else 
+     53            PORT_DATA = data;		//вывод данных на шину индикатора 
+     54            SetBit(PORT_SIG, EN);	        //установка E в 1
+     55            _delay_us(2);
+     56            ClearBit(PORT_SIG, EN);	//установка E в 0 - записывающий фронт
+     57          #endif
+     58          }
+     59          
+     60          //функция ожидания готовности lcd
+     61          #pragma inline = forced
+     62          void LCD_Wait(void)
+     63          {
+     64          #ifdef CHECK_FLAG_BF
+     65            #ifdef BUS_4BIT
+     66            
+     67            unsigned char data;
+     68            DDRX_DATA &= 0x0f;            //конфигурируем порт на вход
+     69            PORT_DATA |= 0xf0;	        //включаем pull-up резисторы
+     70            SetBit(PORT_SIG, RW);         //RW в 1 чтение из lcd
+     71            ClearBit(PORT_SIG, RS);	//RS в 0 команды
+     72            do{
+     73              SetBit(PORT_SIG, EN);	
+     74              _delay_us(2);
+     75              data = PIN_DATA & 0xf0;      //чтение данных с порта
+     76              ClearBit(PORT_SIG, EN);
+     77              data = __swap_nibbles(data);
+     78              SetBit(PORT_SIG, EN);	
+     79              _delay_us(2);
+     80              data |= PIN_DATA & 0xf0;      //чтение данных с порта
+     81              ClearBit(PORT_SIG, EN);
+     82              data = __swap_nibbles(data);
+     83            }while((data & (1<<FLAG_BF))!= 0 );
+     84            ClearBit(PORT_SIG, RW);
+     85            DDRX_DATA |= 0xf0; 
+     86            
+     87            #else
+     88            unsigned char data;
+     89            DDRX_DATA = 0;                //конфигурируем порт на вход
+     90            PORT_DATA = 0xff;	        //включаем pull-up резисторы
+     91            SetBit(PORT_SIG, RW);         //RW в 1 чтение из lcd
+     92            ClearBit(PORT_SIG, RS);	//RS в 0 команды
+     93            do{
+     94              SetBit(PORT_SIG, EN);	
+     95              _delay_us(2);
+     96              data = PIN_DATA;            //чтение данных с порта
+     97              ClearBit(PORT_SIG, EN);	
+     98            }while((data & (1<<FLAG_BF))!= 0 );
+     99            ClearBit(PORT_SIG, RW);
+    100            DDRX_DATA = 0xff; 
+    101            #endif    
+    102          #else
+    103            _delay_us(40);
+    104          #endif  
+    105          }
+    106          
+    107          //функция записи команды 
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    108          void LCD_WriteCom(unsigned char data)
+   \                     LCD_WriteCom:
+    109          {
+    110            LCD_Wait();
+   \   00000000   ED15               LDI     R17, 213
+   \   00000002   951A               DEC     R17
+   \   00000004   F7F1               BRNE    $-2
+   \   00000006   0000               NOP
+    111            ClearBit(PORT_SIG, RS);	//установка RS в 0 - команды
+   \   00000008   98A8               CBI     0x15, 0x00
+    112            LCD_CommonFunc(data);
+   \   0000000A                      REQUIRE ?Subroutine0
+   \   0000000A                      REQUIRE _A_PORTC
+   \   0000000A                      ;               // Fall through to label ?Subroutine0
+    113          }
+    114          
+    115          //функция записи данных
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    116          void LCD_WriteData(unsigned char data)
+   \                     LCD_WriteData:
+    117          {
+    118            LCD_Wait();
+   \   00000000   ED15               LDI     R17, 213
+   \   00000002   951A               DEC     R17
+   \   00000004   F7F1               BRNE    $-2
+   \   00000006   0000               NOP
+    119            SetBit(PORT_SIG, RS);	        //установка RS в 1 - данные
+   \   00000008   9AA8               SBI     0x15, 0x00
+    120            LCD_CommonFunc(data);
+   \   0000000A   ....               RJMP    ?Subroutine0
+   \   0000000C                      REQUIRE _A_PORTC
+    121          }
+    122          
+    123          //функция инициализации
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    124          void LCD_Init(void)
+   \                     LCD_Init:
+    125          {
+    126          #ifdef BUS_4BIT
+    127            DDRX_DATA |= 0xf0;
+   \   00000000   B304               IN      R16, 0x14
+   \   00000002   6F00               ORI     R16, 0xF0
+   \   00000004   BB04               OUT     0x14, R16
+    128            PORT_DATA |= 0xf0; 
+   \   00000006   B305               IN      R16, 0x15
+   \   00000008   6F00               ORI     R16, 0xF0
+   \   0000000A   BB05               OUT     0x15, R16
+    129          #else  
+    130            DDRX_DATA |= 0xff;
+    131            PORT_DATA |= 0xff;
+    132          #endif
+    133            
+    134            DDRX_SIG |= (1<<RW)|(1<<RS)|(1<<EN);
+   \   0000000C   B304               IN      R16, 0x14
+   \   0000000E   6007               ORI     R16, 0x07
+   \   00000010   BB04               OUT     0x14, R16
+    135            PORT_SIG |= (1<<RW)|(1<<RS)|(1<<EN);
+   \   00000012   B305               IN      R16, 0x15
+   \   00000014   6007               ORI     R16, 0x07
+   \   00000016   BB05               OUT     0x15, R16
+    136            ClearBit(PORT_SIG, RW);
+   \   00000018   98A9               CBI     0x15, 0x01
+    137            _delay_ms(40);
+   \   0000001A   EF0F               LDI     R16, 255
+   \   0000001C   EF13               LDI     R17, 243
+   \   0000001E   E021               LDI     R18, 1
+   \   00000020   5001               SUBI    R16, 1
+   \   00000022   4010               SBCI    R17, 0
+   \   00000024   4020               SBCI    R18, 0
+   \   00000026   F7E1               BRNE    $-6
+   \   00000028   C000               RJMP    $+2
+   \   0000002A   0000               NOP
+    138            
+    139          #ifdef HD44780  
+    140            LCD_WriteComInit(0x30); 
+   \   0000002C   E300               LDI     R16, 48
+   \   0000002E   ....               RCALL   LCD_WriteComInit
+    141            _delay_ms(10);
+   \   00000030   E30F               LDI     R16, 63
+   \   00000032   E91C               LDI     R17, 156
+   \   00000034   5001               SUBI    R16, 1
+   \   00000036   4010               SBCI    R17, 0
+   \   00000038   F7E9               BRNE    $-4
+   \   0000003A   C000               RJMP    $+2
+   \   0000003C   0000               NOP
+    142            LCD_WriteComInit(0x30);
+   \   0000003E   E300               LDI     R16, 48
+   \   00000040   ....               RCALL   LCD_WriteComInit
+    143            _delay_ms(1);
+   \   00000042   E90F               LDI     R16, 159
+   \   00000044   E01F               LDI     R17, 15
+   \   00000046   5001               SUBI    R16, 1
+   \   00000048   4010               SBCI    R17, 0
+   \   0000004A   F7E9               BRNE    $-4
+   \   0000004C   C000               RJMP    $+2
+   \   0000004E   0000               NOP
+    144            LCD_WriteComInit(0x30);
+   \   00000050   E300               LDI     R16, 48
+   \   00000052   ....               RCALL   LCD_WriteComInit
+    145          #endif
+    146            
+    147          #ifdef BUS_4BIT  
+    148            LCD_WriteComInit(0x20); //4-ми разрядная шина
+   \   00000054   E200               LDI     R16, 32
+   \   00000056   ....               RCALL   LCD_WriteComInit
+    149            LCD_WriteCom(0x28); //4-ми разрядная шина, 2 - строки
+   \   00000058   E208               LDI     R16, 40
+   \   0000005A   ....               RCALL   LCD_WriteCom
+    150          #else
+    151            LCD_WriteCom(0x38); //8-ми разрядная шина, 2 - строки
+    152          #endif
+    153            LCD_WriteCom(0x08);
+   \   0000005C   E008               LDI     R16, 8
+   \   0000005E   ....               RCALL   LCD_WriteCom
+    154            LCD_WriteCom(0x0c);  //0b00001111 - дисплей вкл, курсор и мерцание выключены
+   \   00000060   E00C               LDI     R16, 12
+   \   00000062   ....               RCALL   LCD_WriteCom
+    155            LCD_WriteCom(0x01);  //0b00000001 - очистка дисплея
+   \   00000064   E001               LDI     R16, 1
+   \   00000066   ....               RCALL   LCD_WriteCom
+    156            _delay_ms(2);
+   \   00000068   E30F               LDI     R16, 63
+   \   0000006A   E11F               LDI     R17, 31
+   \   0000006C   5001               SUBI    R16, 1
+   \   0000006E   4010               SBCI    R17, 0
+   \   00000070   F7E9               BRNE    $-4
+   \   00000072   C000               RJMP    $+2
+   \   00000074   0000               NOP
+    157            LCD_WriteCom(0x06);  //0b00000110 - курсор движется вправо, сдвига нет
+   \   00000076   E006               LDI     R16, 6
+   \   00000078   ....               RJMP    LCD_WriteCom
+   \   0000007A                      REQUIRE _A_DDRC
+   \   0000007A                      REQUIRE _A_PORTC
+    158          }
+    159          
+    160          //функция вывода строки из флэш памяти
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    161          void LCD_SendStringFlash(char __flash *str)
+   \                     LCD_SendStringFlash:
+    162          {
+   \   00000000   939A               ST      -Y, R25
+   \   00000002   938A               ST      -Y, R24
+   \   00000004   01C8               MOVW    R25:R24, R17:R16
+   \   00000006   C003               RJMP    ??LCD_SendStringFlash_0
+    163            unsigned char data;			
+    164            while (*str)
+    165            {
+    166              data = *str++;
+   \                     ??LCD_SendStringFlash_1:
+   \   00000008   9105               LPM     R16, Z+
+   \   0000000A   01CF               MOVW    R25:R24, R31:R30
+    167              LCD_WriteData(data);
+   \   0000000C   ....               RCALL   LCD_WriteData
+    168            }
+   \                     ??LCD_SendStringFlash_0:
+   \   0000000E   01FC               MOVW    R31:R30, R25:R24
+   \   00000010   9104               LPM     R16, Z
+   \   00000012   2300               TST     R16
+   \   00000014   F7C9               BRNE    ??LCD_SendStringFlash_1
+    169          }
+   \   00000016   9189               LD      R24, Y+
+   \   00000018   9199               LD      R25, Y+
+   \   0000001A   9508               RET
+    170          
+    171          //функция вывда строки из ОЗУ
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    172          void LCD_SendString(char *str)
+   \                     LCD_SendString:
+    173          {
+   \   00000000   93BA               ST      -Y, R27
+   \   00000002   93AA               ST      -Y, R26
+   \   00000004   01D8               MOVW    R27:R26, R17:R16
+   \   00000006   C002               RJMP    ??LCD_SendString_0
+    174            unsigned char data;
+    175            while (*str)
+    176            {
+    177              data = *str++;
+   \                     ??LCD_SendString_1:
+   \   00000008   9611               ADIW    R27:R26, 1
+    178              LCD_WriteData(data);
+   \   0000000A   ....               RCALL   LCD_WriteData
+    179            }
+   \                     ??LCD_SendString_0:
+   \   0000000C   910C               LD      R16, X
+   \   0000000E   2300               TST     R16
+   \   00000010   F7D9               BRNE    ??LCD_SendString_1
+    180          }
+   \   00000012   91A9               LD      R26, Y+
+   \   00000014   91B9               LD      R27, Y+
+   \   00000016   9508               RET
+    181          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    182          void LCD_Clear(void)
+   \                     LCD_Clear:
+    183          {
+    184            LCD_WriteCom(0x01);
+   \   00000000   E001               LDI     R16, 1
+   \   00000002   ....               RCALL   LCD_WriteCom
+    185            _delay_ms(2);
+   \   00000004   E30F               LDI     R16, 63
+   \   00000006   E11F               LDI     R17, 31
+   \   00000008   5001               SUBI    R16, 1
+   \   0000000A   4010               SBCI    R17, 0
+   \   0000000C   F7E9               BRNE    $-4
+   \   0000000E   C000               RJMP    $+2
+   \   00000010   0000               NOP
+    186          }
+   \   00000012   9508               RET
+
+   Maximum stack usage in bytes:
+
+     Function              CSTACK RSTACK
+     --------              ------ ------
+     LCD_Clear                 0      2
+       -> LCD_WriteCom         0      2
+     LCD_Init                  0      2
+       -> LCD_WriteComInit     0      2
+       -> LCD_WriteComInit     0      2
+       -> LCD_WriteComInit     0      2
+       -> LCD_WriteComInit     0      2
+       -> LCD_WriteCom         0      2
+       -> LCD_WriteCom         0      2
+       -> LCD_WriteCom         0      2
+       -> LCD_WriteCom         0      2
+       -> LCD_WriteCom         0      2
+     LCD_SendString            2      2
+       -> LCD_WriteData        2      2
+     LCD_SendStringFlash       2      2
+       -> LCD_WriteData        2      2
+     LCD_WriteCom              0      2
+     LCD_WriteComInit          0      2
+     LCD_WriteData             0      2
+
+
+   Segment part sizes:
+
+     Function/Label      Bytes
+     --------------      -----
+     _A_DDRC                1
+     _A_PORTC               1
+     LCD_WriteComInit      22
+     ?Subroutine0          50
+     LCD_WriteCom          10
+     LCD_WriteData         12
+     LCD_Init             122
+     LCD_SendStringFlash   28
+     LCD_SendString        24
+     LCD_Clear             20
+
+ 
+   2 bytes in segment ABSOLUTE
+ 288 bytes in segment CODE
+ 
+ 288 bytes of CODE memory
+   0 bytes of DATA memory (+ 2 bytes shared)
+
+Errors: none
+Warnings: none

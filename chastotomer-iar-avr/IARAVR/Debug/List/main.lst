@@ -1,0 +1,163 @@
+###############################################################################
+#                                                                             #
+# IAR Atmel AVR C/C++ Compiler V5.11B/W32               06/Mar/2011  17:06:42 #
+# Copyright 1996-2008 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Source file  =  K:\дело\сайт\заготовки\Мои статьи\Частотомер на          #
+#                    микроконтроллере\Сym_Proj\IARAVR\main.c                  #
+#    Command line =  "K:\дело\сайт\заготовки\Мои статьи\Частотомер на         #
+#                    микроконтроллере\Сym_Proj\IARAVR\main.c" --cpu=m8535     #
+#                    -ms -o "K:\дело\сайт\заготовки\Мои статьи\Частотомер на  #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\Obj\" -lCN        #
+#                    "K:\дело\сайт\заготовки\Мои статьи\Частотомер на         #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\List\"            #
+#                    --initializers_in_flash -s9 --debug                      #
+#                    -DENABLE_BIT_DEFINITIONS -e -I "C:\Program Files\IAR     #
+#                    Systems\Embedded Workbench 5.0\avr\INC\" -I "C:\Program  #
+#                    Files\IAR Systems\Embedded Workbench 5.0\avr\INC\CLIB\"  #
+#                    --eeprom_size 512                                        #
+#    List file    =  K:\дело\сайт\заготовки\Мои статьи\Частотомер на          #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\List\main.lst     #
+#    Object file  =  K:\дело\сайт\заготовки\Мои статьи\Частотомер на          #
+#                    микроконтроллере\Сym_Proj\IARAVR\Debug\Obj\main.r90      #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+K:\дело\сайт\заготовки\Мои статьи\Частотомер на микроконтроллере\Сym_Proj\IARAVR\main.c
+      1          //***************************************************************************
+      2          //
+      3          //  Author(s)...: Pashgan    http://ChipEnable.Ru   
+      4          //
+      5          //  Target(s)...: ATMega8535
+      6          //
+      7          //  Compiler....: IAR 5.11A
+      8          //
+      9          //  Description.:  Проект частотомера.
+     10          //
+     11          //  Data........: 01.03.11 
+     12          //
+     13          //***************************************************************************
+     14          #include <ioavr.h>
+
+   \                                 In  segment ABSOLUTE, at 0x58
+   \   <unnamed> volatile __io _A_TIFR
+   \                     _A_TIFR:
+   \   00000000                      DS 1
+     15          #include <intrinsics.h>
+     16          #include "lcd_lib.h"
+     17          #include "bcd.h"
+     18          #include "timer.h"
+     19          #include "bits_macros.h"
+     20          
+     21          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     22          int main(void)
+   \                     main:
+     23          {
+     24            LCD_Init();
+   \   00000000   ....               RCALL   LCD_Init
+     25            TIM_Init();
+   \   00000002   ....               RCALL   TIM_Init
+     26            
+     27            LCD_Goto(0,0);
+   \   00000004   E800               LDI     R16, 128
+   \   00000006   ....               RCALL   LCD_WriteCom
+     28            LCD_SendString("Freq: ");
+   \   00000008   ....               LDI     R16, LOW(`?<Constant "Freq: ">`)
+   \   0000000A   ....               LDI     R17, (`?<Constant "Freq: ">`) >> 8
+   \   0000000C   ....               RCALL   LCD_SendString
+     29            
+     30            __enable_interrupt();
+   \   0000000E   9478               SEI
+     31            while(1){
+     32              //ждем установки флага от схемы захвата
+     33              while(BitIsClear(TIFR, ICF1));
+   \                     ??main_0:
+   \   00000010   B708               IN      R16, 0x38
+   \   00000012   FF05               SBRS    R16, 5
+   \   00000014   CFFD               RJMP    ??main_0
+     34              //сохраняем значения таймеров
+     35              Capt();
+   \   00000016   ....               RCALL   Capt
+     36              
+     37              //задержка в 1 секунду
+     38              __delay_cycles(16000000);    
+   \   00000018   EF0F               LDI     R16, 255
+   \   0000001A   ED13               LDI     R17, 211
+   \   0000001C   E320               LDI     R18, 48
+   \   0000001E   5001               SUBI    R16, 1
+   \   00000020   4010               SBCI    R17, 0
+   \   00000022   4020               SBCI    R18, 0
+   \   00000024   F7E1               BRNE    $-6
+   \   00000026   C000               RJMP    $+2
+   \   00000028   0000               NOP
+     39              
+     40              //ждем установки флага от схемы захвата
+     41              while(BitIsClear(TIFR, ICF1));
+   \                     ??main_1:
+   \   0000002A   B708               IN      R16, 0x38
+   \   0000002C   FF05               SBRS    R16, 5
+   \   0000002E   CFFD               RJMP    ??main_1
+     42              //сохраняем значения таймеров
+     43              Capt();
+   \   00000030   ....               RCALL   Capt
+     44          
+     45              //вычисляем значение частоты и выводим на lcd
+     46              TIM_Calculation(); 
+   \   00000032   ....               RCALL   TIM_Calculation
+   \   00000034   CFED               RJMP    ??main_0
+   \   00000036                      REQUIRE _A_TIFR
+     47            }
+     48            return 0;
+     49          }
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "Freq: ">>`:
+   \   00000000   72467165203A       DB "Freq: "
+   \              00          
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "Freq: ">`:
+   \   00000000                      DS 7
+   \   00000007                      REQUIRE `?<Initializer for <Constant "Freq: ">>`
+
+   Maximum stack usage in bytes:
+
+     Function             CSTACK RSTACK
+     --------             ------ ------
+     main                     0      2
+       -> LCD_Init            0      2
+       -> TIM_Init            0      2
+       -> LCD_WriteCom        0      2
+       -> LCD_SendString      0      2
+       -> Capt                0      2
+       -> Capt                0      2
+       -> TIM_Calculation     0      2
+
+
+   Segment part sizes:
+
+     Function/Label                 Bytes
+     --------------                 -----
+     _A_TIFR                           1
+     main                             54
+     ?<Initializer for <Constant "Freq: ">>
+                                       7
+     ?<Constant "Freq: ">              7
+      Others                           6
+
+ 
+  1 byte  in segment ABSOLUTE
+ 54 bytes in segment CODE
+  6 bytes in segment INITTAB
+  7 bytes in segment NEAR_I
+  7 bytes in segment NEAR_ID
+ 
+ 61 bytes of CODE memory (+ 6 bytes shared)
+  7 bytes of DATA memory (+ 1 byte  shared)
+
+Errors: none
+Warnings: 1

@@ -1,0 +1,114 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.data
+  17               	.LC0:
+  18 0000 4672 6571 		.string	"Freq: "
+  18      3A20 00
+  19               		.text
+  20               	.global	main
+  22               	main:
+  23               	.LFB6:
+  24               	.LM1:
+  25 0000 CF93      		push r28
+  26 0002 DF93      		push r29
+  27               	/* prologue: function */
+  28               	/* frame size = 0 */
+  29               	.LM2:
+  30 0004 00D0      		rcall LCD_Init
+  31               	.LM3:
+  32 0006 00D0      		rcall TIM_Init
+  33               	.LM4:
+  34 0008 80E8      		ldi r24,lo8(-128)
+  35 000a 00D0      		rcall LCD_WriteCom
+  36               	.LM5:
+  37 000c 80E0      		ldi r24,lo8(.LC0)
+  38 000e 90E0      		ldi r25,hi8(.LC0)
+  39 0010 00D0      		rcall LCD_SendString
+  40               	.LM6:
+  41               	/* #APP */
+  42               	 ;  30 "main.c" 1
+  43 0012 7894      		sei
+  44               	 ;  0 "" 2
+  45               	/* #NOAPP */
+  46               	.LBB12:
+  47               	.LBB13:
+  48               	.LBB14:
+  49               	.LBB15:
+  50               	.LM7:
+  51 0014 C0E9      		ldi r28,lo8(400)
+  52 0016 D1E0      		ldi r29,hi8(400)
+  53               	.L11:
+  54               	.LBE15:
+  55               	.LBE14:
+  56               	.LBE13:
+  57               	.LBE12:
+  58               	.LM8:
+  59 0018 08B6      		in __tmp_reg__,88-32
+  60 001a 05FE      		sbrs __tmp_reg__,5
+  61 001c 00C0      		rjmp .L11
+  62               	.LM9:
+  63 001e 00D0      		rcall Capt
+  64 0020 20E0      		ldi r18,lo8(0)
+  65 0022 30E0      		ldi r19,hi8(0)
+  66               	.L3:
+  67               	.LBB19:
+  68               	.LBB18:
+  69               	.LBB17:
+  70               	.LBB16:
+  71               	.LM10:
+  72 0024 CE01      		movw r24,r28
+  73               	.LVL0:
+  74               	/* #APP */
+  75               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+  76 0026 0197      		1: sbiw r24,1
+  77 0028 01F4      		brne 1b
+  78               	 ;  0 "" 2
+  79               	/* #NOAPP */
+  80 002a 2F5F      		subi r18,lo8(-(1))
+  81 002c 3F4F      		sbci r19,hi8(-(1))
+  82               	.LBE16:
+  83               	.LBE17:
+  84               	.LM11:
+  85 002e 87E2      		ldi r24,hi8(10000)
+  86 0030 2031      		cpi r18,lo8(10000)
+  87 0032 3807      		cpc r19,r24
+  88               	.LVL1:
+  89 0034 01F4      		brne .L3
+  90               	.L7:
+  91               	.LBE18:
+  92               	.LBE19:
+  93               	.LM12:
+  94 0036 08B6      		in __tmp_reg__,88-32
+  95 0038 05FE      		sbrs __tmp_reg__,5
+  96 003a 00C0      		rjmp .L7
+  97               	.LM13:
+  98 003c 00D0      		rcall Capt
+  99               	.LM14:
+ 100 003e 00D0      		rcall TIM_Calculation
+ 101 0040 00C0      		rjmp .L11
+ 102               	.LFE6:
+ 128               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:2      *ABS*:0000003f __SREG__
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:3      *ABS*:0000003e __SP_H__
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:4      *ABS*:0000003d __SP_L__
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:5      *ABS*:00000034 __CCP__
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\oves0\AppData\Local\Temp/cc17FGlE.s:22     .text:00000000 main
+
+UNDEFINED SYMBOLS
+LCD_Init
+TIM_Init
+LCD_WriteCom
+LCD_SendString
+Capt
+TIM_Calculation
+__do_copy_data

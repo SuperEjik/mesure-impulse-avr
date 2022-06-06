@@ -1,0 +1,9 @@
+VERSION:3 SOURCE_TIMESTAMP:54C1B08E
+NODE:I LEVEL:0 LINE:14 "D:\CVAVR\inc\mega8535.h"
+NODE:I LEVEL:0 LINE:15 "D:\CVAVR\inc\delay.h"
+NODE:I LEVEL:0 LINE:16 "D:\CVAVR\inc\stdio.h"
+NODE:I LEVEL:0 LINE:17 "D:\atmel\project\chastotomer-cv-avr\CodeVisionAvr\lcd_lib.h"
+NODE:I LEVEL:0 LINE:18 "D:\atmel\project\chastotomer-cv-avr\CodeVisionAvr\bcd.h"
+NODE:I LEVEL:0 LINE:19 "D:\atmel\project\chastotomer-cv-avr\CodeVisionAvr\timer.h"
+NODE:I LEVEL:0 LINE:20 "D:\atmel\project\chastotomer-cv-avr\CodeVisionAvr\bits_macros.h"
+NODE:F LEVEL:0 LINE:23 "main(void)"

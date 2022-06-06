@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>1287094702</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\lcd_lib.c</file>
+      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.pbi</file>
+      <file>$TOOLKIT_DIR$\src\template\cfg1soim.xcl</file>
+      <file>$PROJ_DIR$\Debug\List\bcd.lst</file>
+      <file>$PROJ_DIR$\bcd.h</file>
+      <file>$TOOLKIT_DIR$\inc\iom8535.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bcd.r90</file>
+      <file>$PROJ_DIR$\bits_macros.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bcd.pbi</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl1s-ec_mul.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\main.lst</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\timer.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\cymometer.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd_lib.r90</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$PROJ_DIR$\Debug\List\cymometer.map</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.r90</file>
+      <file>$PROJ_DIR$\Debug\Exe\cymometer.hex</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd_lib.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\timer.lst</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\Cymometer2\Debug\List\cymometer.map</file>
+      <file>$PROJ_DIR$\lcd_lib.h</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm8535.xcl</file>
+      <file>$PROJ_DIR$\Debug\List\lcd_lib.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
+      <file>$PROJ_DIR$\timer.c</file>
+      <file>$PROJ_DIR$\bcd.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 20 18</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\lcd_lib.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 16 26</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 21</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 24 1 6 17 13</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 24 1 6 17 13</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\cymometer.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 9 21 11 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\cymometer.hex</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 18</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 25 3 7 16 27 19 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\timer.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 19 22</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 1 6 17 13 8 24 5</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 1 6 17 13 8 24 5</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\bcd.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 7 4</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 5 24 1 6 17 13</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5 24 1 6 17 13</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 27 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 11</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 1 6 17 13 24 5 14 8</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1 6 17 13 24 5 14 8</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+
